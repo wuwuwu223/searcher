@@ -9,6 +9,7 @@ import (
 	"searcher/global"
 	"searcher/search/model"
 	"strings"
+	"sync"
 )
 
 //ImportCsv 导入csv
@@ -38,7 +39,19 @@ func ImportCsv(fileName string) {
 		datas = append(datas, data)
 	}
 	global.Db.CreateInBatches(datas, 1000)
-	SplitData(datas)
+	var wg sync.WaitGroup
+	for i := 0; i < len(datas)/100+1; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			if i*100+100 < len(datas) {
+				SplitData(datas[i*100 : i*100+100])
+			} else {
+				SplitData(datas[i*100:])
+			}
+		}(i)
+	}
+	wg.Wait()
 }
 
 var useless = "dpcueyahokxw"
@@ -84,7 +97,8 @@ func SplitData(datas []model.Data) {
 	}
 	// 处理分词结果
 	// 支持普通模式和搜索模式两种分词，见代码中SegmentsToString函数的注释。
-	global.Db.CreateInBatches(kws, 1000)
+	global.Db.Create(kws)
+	//log.Println("完成100条", len(kws))
 }
 
 // SplitStr 搜索字分词
