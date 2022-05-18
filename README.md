@@ -9,7 +9,8 @@
 ```shell
 go build
 ```
-#### 导入数据库
+#### 导入数据
+将悟空数据集的csv文件放入resources文件夹下然后执行下面命令
 ```shell
 ./searcher --init=true
 ```
