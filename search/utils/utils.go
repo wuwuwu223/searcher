@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/csv"
-	"fmt"
 	"github.com/huichen/sego"
 	"io"
 	"log"
@@ -52,9 +51,16 @@ func SplitData(datas []model.Data) {
 		segments := global.Seg.Segment(text)
 		str := sego.SegmentsToString(segments, true)
 		arr := strings.Split(str, " ")
+		if len(arr) == 0 {
+			continue
+		}
+		existWord := make(map[string]bool)
 		for i := range arr {
 			if len(arr[i]) > 1 {
 				token := strings.Split(arr[i], "/")
+				if len(token[1]) < 1 {
+					continue
+				}
 				cx := token[1][0]
 				flag := false
 				for x := range useless {
@@ -65,10 +71,14 @@ func SplitData(datas []model.Data) {
 				if flag {
 					continue
 				}
+				if existWord[arr[i]] {
+					continue
+				}
 				var kw model.Kw
 				kw.DataId = datas[s].ID
 				kw.Word = arr[i]
 				kws = append(kws, kw)
+				existWord[arr[i]] = true
 			}
 		}
 	}
@@ -90,7 +100,7 @@ func SplitStr(row string) []string {
 			flag := false
 			for x := range useless {
 				if cx == useless[x] {
-					fmt.Println(cx)
+					//fmt.Println(cx)
 					flag = true
 				}
 			}

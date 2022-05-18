@@ -6,6 +6,7 @@ import (
 	"searcher/search/model"
 	"searcher/search/utils"
 	"sort"
+	"strings"
 )
 
 func Search(row string) []model.DataResult {
@@ -23,6 +24,11 @@ func Search(row string) []model.DataResult {
 	}
 	mapping := make(map[uint]int, len(result)) //分析词频
 	for j := range result {
+		token := strings.Split(result[j].Word, "/")
+		cx := token[1]
+		if cx == "nr" {
+			mapping[result[j].DataId]++
+		}
 		mapping[result[j].DataId]++
 	}
 	var sdatas sDatas
