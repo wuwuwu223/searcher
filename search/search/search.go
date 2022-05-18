@@ -9,10 +9,10 @@ import (
 )
 
 func Search(row string) []model.DataResult {
-	arr := utils.SplitStr(row)
+	arr := utils.SplitStr(row) //分词
 
 	var result []model.Kw
-	for i := range arr {
+	for i := range arr { //遍历查询分词结果
 		var alist []model.Kw
 		//global.Db.Where("word=?", arr[i]).FindInBatches(&alist, 500, func(tx *gorm.DB, batch int) error {
 		//	result = append(result, alist...)
@@ -21,7 +21,7 @@ func Search(row string) []model.DataResult {
 		global.Db.Where("word=?", arr[i]).Find(&alist)
 		result = append(result, alist...)
 	}
-	mapping := make(map[uint]int, len(result))
+	mapping := make(map[uint]int, len(result)) //分析词频
 	for j := range result {
 		mapping[result[j].DataId]++
 	}
@@ -32,7 +32,7 @@ func Search(row string) []model.DataResult {
 		sdata.Count = v
 		sdatas = append(sdatas, sdata)
 	}
-	sort.Sort(&sdatas)
+	sort.Sort(&sdatas) //词频排序
 	var values []uint
 	for i := range sdatas {
 		values = append(values, sdatas[i].Id)
@@ -40,8 +40,8 @@ func Search(row string) []model.DataResult {
 	var list []model.DataResult
 	global.Db.Model(&model.Data{}).Select("url,caption").Where("id in (?)", values).Clauses(clause.OrderBy{
 		Expression: clause.Expr{SQL: "FIELD(id,?)", Vars: []interface{}{values}, WithoutParentheses: true},
-	}).Find(&list)
-	return list
+	}).Find(&list) //查询数据
+	return list //返回数据
 }
 
 type sData struct {

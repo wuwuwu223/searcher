@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/csv"
+	"fmt"
 	"github.com/huichen/sego"
 	"io"
 	"log"
@@ -41,6 +42,8 @@ func ImportCsv(fileName string) {
 	SplitData(datas)
 }
 
+var useless = "dpcueyahokxw"
+
 // SplitData 导入时分词
 func SplitData(datas []model.Data) {
 	var kws []model.Kw
@@ -51,6 +54,17 @@ func SplitData(datas []model.Data) {
 		arr := strings.Split(str, " ")
 		for i := range arr {
 			if len(arr[i]) > 1 {
+				token := strings.Split(arr[i], "/")
+				cx := token[1][0]
+				flag := false
+				for x := range useless {
+					if cx == useless[x] {
+						flag = true
+					}
+				}
+				if flag {
+					continue
+				}
 				var kw model.Kw
 				kw.DataId = datas[s].ID
 				kw.Word = arr[i]
@@ -71,6 +85,18 @@ func SplitStr(row string) []string {
 	var result []string
 	for i := range arr {
 		if len(arr[i]) > 1 {
+			token := strings.Split(arr[i], "/")
+			cx := token[1][0]
+			flag := false
+			for x := range useless {
+				if cx == useless[x] {
+					fmt.Println(cx)
+					flag = true
+				}
+			}
+			if flag {
+				continue
+			}
 			result = append(result, arr[i])
 		}
 	}
