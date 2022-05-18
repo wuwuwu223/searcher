@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"searcher/global"
 	"searcher/initializer"
-	"searcher/search/utils"
 )
 
 func main() {
@@ -16,8 +15,8 @@ func main() {
 	initializer.InitConfig()
 	initializer.InitDb()
 	initializer.InitSegmenter()
-	if needInit { //如果需要初始化就导入这个文件
-		utils.ImportCsv("wukong50k_release.csv")
+	if needInit { //导入resources下的csv文件
+		initializer.InitData()
 		return //导入后关闭程序
 	}
 	r := gin.Default()
