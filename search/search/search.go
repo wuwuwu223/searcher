@@ -1,7 +1,6 @@
 package search
 
 import (
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"searcher/global"
 	"searcher/search/model"
@@ -11,17 +10,20 @@ import (
 
 func Search(row string) []model.DataResult {
 	arr := utils.SplitStr(row)
-	mapping := make(map[uint]int)
+
 	var result []model.Kw
 	for i := range arr {
 		var alist []model.Kw
-		global.Db.Where("word=?", arr[i]).FindInBatches(&alist, 10000, func(tx *gorm.DB, batch int) error {
-			result = append(result, alist...)
-			return nil
-		})
-		for j := range result {
-			mapping[result[j].DataId]++
-		}
+		//global.Db.Where("word=?", arr[i]).FindInBatches(&alist, 500, func(tx *gorm.DB, batch int) error {
+		//	result = append(result, alist...)
+		//	return nil
+		//})
+		global.Db.Where("word=?", arr[i]).Find(&alist)
+		result = append(result, alist...)
+	}
+	mapping := make(map[uint]int, len(result))
+	for j := range result {
+		mapping[result[j].DataId]++
 	}
 	var sdatas sDatas
 	for k, v := range mapping {
