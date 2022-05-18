@@ -1,0 +1,12 @@
+{
+  "mysql": {
+    "address": "127.0.0.1:3306",
+    "username": "searcher",
+    "password": "searcher",
+    "database": "searcher"
+  },
+  "http_server": {
+    "listen_ip": "0.0.0.0",
+    "listen_port": 8080
+  }
+}
