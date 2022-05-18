@@ -22,4 +22,4 @@ go build
 ### 功能说明
 
 API接口：   
-GET http://http://localhost:8080/api/v1/search?s=搜索内容  
+GET http://localhost:8080/api/v1/search?s=搜索内容  
