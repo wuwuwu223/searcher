@@ -18,6 +18,7 @@ func main() {
 	initializer.InitSegmenter()
 	if needInit { //如果需要初始化就导入这个文件
 		utils.ImportCsv("wukong50k_release.csv")
+		return //导入后关闭程序
 	}
 	r := gin.Default()
 
